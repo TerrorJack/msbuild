@@ -38,16 +38,14 @@ data Entry = Entry
   , isPrerelease :: !Bool
   }
 
-$(deriveJSON defaultOptions 'Entry)
+$(deriveFromJSON defaultOptions 'Entry)
 
 queryVSEntries :: IO [Entry]
 queryVSEntries = runVSWhereWith ["-products", "*"]
 
 latestMSBuildPath :: IO FilePath
 latestMSBuildPath = do
-  r <-
-    runVSWhereWith
-      ["-products", "*", "-requires", "Microsoft.Component.MSBuild", "-latest"]
+  r <- runVSWhereWith ["-products", "*", "-latest"]
   case r of
     [e] -> pure $ installationPath e
     _ ->
