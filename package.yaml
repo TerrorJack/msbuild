@@ -32,6 +32,8 @@ dependencies:
   - process
   - process-extras
   - template-haskell
+  - text
+  - time
 
 library:
   source-dirs: src

@@ -13,6 +13,8 @@ import Data.Aeson
 import Data.Aeson.TH
 import Data.Binary
 import qualified Data.ByteString.Lazy as LBS
+import qualified Data.Text as T
+import Data.Time
 import Language.Haskell.TH.Syntax
 import System.Exit
 import System.Process.ByteString.Lazy
@@ -34,8 +36,24 @@ runVSWhereWith args = do
     _ -> throwIO c
 
 data Entry = Entry
-  { installationPath :: !FilePath
+  { instanceId :: !T.Text
+  , installDate :: !UTCTime
+  , installationName :: !T.Text
+  , installationPath :: !FilePath
+  , installationVersion :: !T.Text
+  , productId :: !T.Text
+  , productPath :: !FilePath
   , isPrerelease :: !Bool
+  , displayName :: !T.Text
+  , description :: !T.Text
+  , channelId :: T.Text
+  , channelPath :: !FilePath
+  , channelUri :: !String
+  , enginePath :: !FilePath
+  , releaseNotes :: !String
+  , thirdPartyNotices :: !String
+  , catalog :: !Object
+  , properties :: !Object
   }
 
 $(deriveFromJSON defaultOptions 'Entry)
