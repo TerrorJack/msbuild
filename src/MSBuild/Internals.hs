@@ -24,7 +24,8 @@ vswherePath =
 
 runVSWhereWith :: FromJSON a => [String] -> IO a
 runVSWhereWith args = do
-  (c, o, _) <- readProcessWithExitCode vswherePath args LBS.empty
+  (c, o, _) <-
+    readProcessWithExitCode vswherePath (args ++ ["-format", "json"]) LBS.empty
   case c of
     ExitSuccess ->
       case eitherDecode' o of
@@ -40,14 +41,14 @@ data Entry = Entry
 $(deriveJSON defaultOptions 'Entry)
 
 queryVSEntries :: IO [Entry]
-queryVSEntries = runVSWhereWith ["-products", "*", "-format", "json"]
+queryVSEntries = runVSWhereWith ["-products", "*"]
 
 latestVSInstallationPath :: IO FilePath
 latestVSInstallationPath = do
-  r <- runVSWhereWith ["-products", "*", "-latest", "-format", "json"]
+  r <- runVSWhereWith ["-products", "*", "-latest"]
   case r of
     [e] -> pure $ installationPath e
     _ ->
       fail $
       "vswhere.exe -products * -latest returned " ++
-      show (length r) ++ " results"
+      show (length r) ++ " results, expecting 1"
