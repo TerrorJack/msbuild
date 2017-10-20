@@ -4,7 +4,7 @@ module MSBuild.Run
   ) where
 
 import Data.List
-import MSBuild.Where
+import MSBuild.Query
 import System.FilePath
 import System.Process
 

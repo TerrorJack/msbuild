@@ -1,6 +1,6 @@
 {-# LANGUAGE TemplateHaskell #-}
 
-module MSBuild.Where
+module MSBuild.Query
   ( vswherePath
   , runVSWhereWith
   , Entry(..)
