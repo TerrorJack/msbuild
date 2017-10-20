@@ -35,3 +35,10 @@ dependencies:
 
 library:
   source-dirs: src
+
+tests:
+  msbuild-test:
+    source-dirs: test
+    main: msbuild-test.hs
+    dependencies:
+      - msbuild
