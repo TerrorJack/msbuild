@@ -1,6 +1,11 @@
 # msbuild
 
-Utilities for working with [MSBuild](https://github.com/Microsoft/msbuild) in Haskell.
+Utilities for working with [MSBuild](https://github.com/Microsoft/msbuild) in Haskell. Currently supports:
+
+* Querying MSBuild installation info
+* Running commands in MSBuild command prompts
+
+You can install MSBuild with [Build Tools for Visual Studio 2017](https://www.visualstudio.com/downloads/#build-tools-for-visual-studio-2017).
 
 ## Motivation
 

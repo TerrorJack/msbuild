@@ -28,6 +28,8 @@ dependencies:
   - base
   - binary
   - bytestring
+  - filepath
+  - process
   - process-extras
   - template-haskell
 

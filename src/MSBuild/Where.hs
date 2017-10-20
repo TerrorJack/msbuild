@@ -1,11 +1,11 @@
 {-# LANGUAGE TemplateHaskell #-}
 
-module MSBuild.Internals
+module MSBuild.Where
   ( vswherePath
   , runVSWhereWith
   , Entry(..)
   , queryVSEntries
-  , latestVSInstallationPath
+  , latestMSBuildPath
   ) where
 
 import Control.Exception
@@ -43,12 +43,12 @@ $(deriveJSON defaultOptions 'Entry)
 queryVSEntries :: IO [Entry]
 queryVSEntries = runVSWhereWith ["-products", "*"]
 
-latestVSInstallationPath :: IO FilePath
-latestVSInstallationPath = do
-  r <- runVSWhereWith ["-products", "*", "-latest"]
+latestMSBuildPath :: IO FilePath
+latestMSBuildPath = do
+  r <-
+    runVSWhereWith
+      ["-products", "*", "-requires", "Microsoft.Component.MSBuild", "-latest"]
   case r of
     [e] -> pure $ installationPath e
     _ ->
-      fail $
-      "vswhere.exe -products * -latest returned " ++
-      show (length r) ++ " results, expecting 1"
+      fail $ "vswhere returned " ++ show (length r) ++ " results, expecting 1"
