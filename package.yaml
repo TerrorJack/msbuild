@@ -27,7 +27,8 @@ dependencies:
   - aeson
   - base
   - binary
-  - process
+  - bytestring
+  - process-extras
   - template-haskell
 
 library:
