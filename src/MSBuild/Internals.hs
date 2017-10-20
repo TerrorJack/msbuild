@@ -1,8 +1,8 @@
 {-# LANGUAGE TemplateHaskell #-}
 
 module MSBuild.Internals
-  ( vcswherePath
-  , runVcswhereWith
+  ( vswherePath
+  , runVswhereWith
   ) where
 
 import Control.Exception
@@ -13,14 +13,14 @@ import Language.Haskell.TH.Syntax
 import System.Exit
 import System.Process.ByteString.Lazy
 
-vcswherePath :: FilePath
-vcswherePath =
+vswherePath :: FilePath
+vswherePath =
   $(do p <- runIO $ decodeFile ".buildinfo"
        lift (p :: FilePath))
 
-runVcswhereWith :: FromJSON a => [String] -> IO a
-runVcswhereWith args = do
-  (c, o, _) <- readProcessWithExitCode vcswherePath args LBS.empty
+runVswhereWith :: FromJSON a => [String] -> IO a
+runVswhereWith args = do
+  (c, o, _) <- readProcessWithExitCode vswherePath args LBS.empty
   case c of
     ExitSuccess ->
       case eitherDecode' o of
