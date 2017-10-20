@@ -1,0 +1,34 @@
+name: msbuild
+version: 0.0.1
+category: Compiler
+synopsis: Utilities for working with MSBuild in Haskell.
+maintainer: Shao Cheng <astrohavoc@gmail.com>
+copyright: (c) 2017 Shao Cheng
+license: BSD3
+github: TerrorJack/msbuild
+
+extra-source-files:
+  - LICENSE
+  - README.md
+
+data-files:
+  - utils/vswhere.exe
+
+custom-setup:
+  dependencies:
+    - base
+    - binary
+    - Cabal
+    - filepath
+
+ghc-options: -Wall
+
+dependencies:
+  - aeson
+  - base
+  - binary
+  - process
+  - template-haskell
+
+library:
+  source-dirs: src
