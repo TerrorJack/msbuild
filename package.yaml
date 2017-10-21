@@ -14,30 +14,23 @@ extra-source-files:
 data-files:
   - utils/vswhere.exe
 
-custom-setup:
-  dependencies:
-    - base
-    - binary
-    - Cabal
-    - filepath
-
 ghc-options: -Wall
 
 dependencies:
   - aeson
   - base
-  - binary
   - bytestring
   - directory
   - filepath
   - process
   - process-extras
-  - template-haskell
   - text
   - time
 
 library:
   source-dirs: src
+  other-modules:
+    - Paths_msbuild
   other-extensions:
     - TemplateHaskell
 

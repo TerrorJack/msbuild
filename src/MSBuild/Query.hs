@@ -1,7 +1,7 @@
 {-# LANGUAGE TemplateHaskell #-}
 
 module MSBuild.Query
-  ( vswherePath
+  ( queryVSWherePath
   , runVSWhereWith
   , Entry(..)
   , queryVSEntries
@@ -11,24 +11,25 @@ module MSBuild.Query
 import Control.Exception
 import Data.Aeson
 import Data.Aeson.TH
-import Data.Binary
 import qualified Data.ByteString.Lazy as LBS
 import qualified Data.Text as T
 import Data.Time
 import Data.Version
-import Language.Haskell.TH.Syntax
+import Paths_msbuild
 import System.Exit
+import System.FilePath
 import System.Process.ByteString.Lazy
 
-vswherePath :: FilePath
-vswherePath =
-  $(do p <- runIO $ decodeFile ".buildinfo"
-       lift (p :: FilePath))
+queryVSWherePath :: IO FilePath
+queryVSWherePath = do
+  datadir <- getDataDir
+  pure $ datadir </> "utils" </> "vswhere.exe"
 
 runVSWhereWith :: FromJSON a => [String] -> IO a
 runVSWhereWith args = do
+  vswhere <- queryVSWherePath
   (c, o, _) <-
-    readProcessWithExitCode vswherePath (args ++ ["-format", "json"]) LBS.empty
+    readProcessWithExitCode vswhere (args ++ ["-format", "json"]) LBS.empty
   case c of
     ExitSuccess ->
       case eitherDecode' o of
@@ -47,7 +48,7 @@ data Entry = Entry
   , isPrerelease :: !Bool
   , displayName :: !T.Text
   , description :: !T.Text
-  , channelId :: T.Text
+  , channelId :: !T.Text
   , channelPath :: !FilePath
   , channelUri :: !String
   , enginePath :: !FilePath
