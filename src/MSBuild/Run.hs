@@ -21,7 +21,8 @@ runCommands cmds =
         for_ cmds $ hPutStrLn h
         hClose h
         pure p)
-    removeFile $ \p -> callProcess "cmd.exe" ["/c", p]
+    removeFile $
+  callCommand . show
 
 runCommandsWithX64NativeTools :: [String] -> IO ()
 runCommandsWithX64NativeTools cmds = do

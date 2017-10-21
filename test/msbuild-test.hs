@@ -8,5 +8,5 @@ main = do
   p <-
     compileX64CppStub
       "extern \"C\" { int plus(int x, int y) { return x + y; } }"
-      []
+      ["/Ox"]
   removeFile p

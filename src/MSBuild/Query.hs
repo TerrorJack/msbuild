@@ -15,6 +15,7 @@ import Data.Binary
 import qualified Data.ByteString.Lazy as LBS
 import qualified Data.Text as T
 import Data.Time
+import Data.Version
 import Language.Haskell.TH.Syntax
 import System.Exit
 import System.Process.ByteString.Lazy
@@ -40,7 +41,7 @@ data Entry = Entry
   , installDate :: !UTCTime
   , installationName :: !T.Text
   , installationPath :: !FilePath
-  , installationVersion :: !T.Text
+  , installationVersion :: !Version
   , productId :: !T.Text
   , productPath :: !FilePath
   , isPrerelease :: !Bool
