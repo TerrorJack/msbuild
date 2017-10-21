@@ -28,6 +28,7 @@ dependencies:
   - base
   - binary
   - bytestring
+  - directory
   - filepath
   - process
   - process-extras

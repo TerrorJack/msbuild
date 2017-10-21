@@ -1,19 +1,49 @@
 module MSBuild.Run
-  ( runCommandsWithBat
+  ( runCommands
   , runCommandsWithX64NativeTools
+  , compileX64CppStub
   ) where
 
-import Data.List
+import Control.Exception
+import qualified Data.ByteString as BS
+import Data.Foldable
 import MSBuild.Query
+import System.Directory
 import System.FilePath
+import System.IO
 import System.Process
 
-runCommandsWithBat :: FilePath -> [String] -> IO ()
-runCommandsWithBat bat cmds = callCommand $ intercalate " & " (show bat : cmds)
+runCommands :: [String] -> IO ()
+runCommands cmds =
+  bracket
+    (do tmpdir <- getTemporaryDirectory
+        (p, h) <- openTempFile tmpdir "tmp.cmd"
+        for_ cmds $ hPutStrLn h
+        hClose h
+        pure p)
+    removeFile $ \p -> callProcess "cmd.exe" ["/c", p]
 
 runCommandsWithX64NativeTools :: [String] -> IO ()
 runCommandsWithX64NativeTools cmds = do
   p <- latestMSBuildPath
-  runCommandsWithBat
-    (p </> "VC" </> "Auxiliary" </> "Build" </> "vcvars64.bat")
+  runCommands $
+    ("call " ++ show (p </> "VC" </> "Auxiliary" </> "Build" </> "vcvars64.bat")) :
     cmds
+
+compileX64CppStub :: BS.ByteString -> [String] -> IO FilePath
+compileX64CppStub cpp args = do
+  tmpdir <- getTemporaryDirectory
+  bracket
+    (do (p, h) <- openBinaryTempFile tmpdir "tmp.cpp"
+        BS.hPut h cpp
+        hClose h
+        pure p)
+    removeFile $ \cpp_p ->
+    bracket
+      (do (p, h) <- openBinaryTempFile tmpdir "tmp.obj"
+          hClose h
+          pure p)
+      (\_ -> pure ()) $ \obj_p -> do
+      runCommandsWithX64NativeTools
+        [unwords $ ["cl.exe", "/c"] ++ args ++ ["/Fo:", show obj_p, show cpp_p]]
+      pure obj_p

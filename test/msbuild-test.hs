@@ -1,4 +1,12 @@
+{-# LANGUAGE OverloadedStrings #-}
+
 import MSBuild.Run
+import System.Directory
 
 main :: IO ()
-main = runCommandsWithX64NativeTools ["cl.exe"]
+main = do
+  p <-
+    compileX64CppStub
+      "extern \"C\" { int plus(int x, int y) { return x + y; } }"
+      []
+  removeFile p
