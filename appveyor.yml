@@ -14,7 +14,7 @@ build_script:
   - stack --no-terminal setup > NUL
   - stack --no-terminal exec pacman -- -Syu --noconfirm
   - stack --no-terminal exec pacman -- -Syu --noconfirm
-  - stack --no-terminal exec pacman -- -Syu --noconfirm
+  - stack --no-terminal exec pacman -- -Scc --noconfirm
   - stack --no-terminal build --haddock --haddock-deps --test --no-run-tests
 
 test_script:
