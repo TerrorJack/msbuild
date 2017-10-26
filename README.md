@@ -1,5 +1,7 @@
 # msbuild
 
+[![Build Status](https://ci.appveyor.com/api/projects/status/github/TerrorJack/msbuild?branch=master&svg=true)](https://ci.appveyor.com/project/TerrorJack/msbuild?branch=master)
+
 Utilities for working with [MSBuild](https://github.com/Microsoft/msbuild) in Haskell. Currently supports:
 
 * Querying MSBuild installation info
