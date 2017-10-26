@@ -12,6 +12,7 @@ import qualified Data.ByteString as BS
 import Data.Foldable
 import MSBuild.Query
 import System.Directory
+import System.Exit
 import System.FilePath
 import System.IO
 import System.Process
@@ -32,7 +33,16 @@ runCommands cmds =
     h <- openFile p WriteMode
     for_ cmds $ hPutStrLn h
     hClose h
-    callCommand $ show p
+    (c, std_out', std_err') <- readCreateProcessWithExitCode (shell $ show p) ""
+    case c of
+      ExitSuccess -> pure ()
+      _ ->
+        fail $
+        "runCommands " ++
+        show cmds ++
+        " failed with " ++
+        show c ++
+        ", std_out = " ++ show std_out' ++ ", std_err = " ++ show std_err'
 
 runCommandsWithX64NativeTools :: [String] -> IO ()
 runCommandsWithX64NativeTools cmds = do
