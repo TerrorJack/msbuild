@@ -1,11 +1,11 @@
 {-# LANGUAGE TemplateHaskell #-}
 
 module MSBuild.Query
-  ( queryVSWherePath
+  ( vswherePath
   , runVSWhereWith
   , Entry(..)
-  , queryVSEntries
-  , latestMSBuildPath
+  , queryEntries
+  , latestInstallationPath
   ) where
 
 import Control.Exception
@@ -15,21 +15,21 @@ import qualified Data.ByteString.Lazy as LBS
 import qualified Data.Text as T
 import Data.Time
 import Data.Version
+import Language.Haskell.TH.Syntax
 import Paths_msbuild
 import System.Exit
 import System.FilePath
 import System.Process.ByteString.Lazy
 
-queryVSWherePath :: IO FilePath
-queryVSWherePath = do
-  datadir <- getDataDir
-  pure $ datadir </> "utils" </> "vswhere.exe"
+vswherePath :: FilePath
+vswherePath =
+  $(do p <- runIO getDataDir
+       lift $ p </> "utils" </> "vswhere.exe")
 
 runVSWhereWith :: FromJSON a => [String] -> IO a
 runVSWhereWith args = do
-  vswhere <- queryVSWherePath
   (c, o, _) <-
-    readProcessWithExitCode vswhere (args ++ ["-format", "json"]) LBS.empty
+    readProcessWithExitCode vswherePath (args ++ ["-format", "json"]) LBS.empty
   case c of
     ExitSuccess ->
       case eitherDecode' o of
@@ -56,15 +56,15 @@ data Entry = Entry
   , thirdPartyNotices :: !String
   , catalog :: !Object
   , properties :: !Object
-  }
+  } deriving (Show)
 
 $(deriveFromJSON defaultOptions 'Entry)
 
-queryVSEntries :: IO [Entry]
-queryVSEntries = runVSWhereWith ["-products", "*"]
+queryEntries :: IO [Entry]
+queryEntries = runVSWhereWith ["-products", "*"]
 
-latestMSBuildPath :: IO FilePath
-latestMSBuildPath = do
+latestInstallationPath :: IO FilePath
+latestInstallationPath = do
   r <- runVSWhereWith ["-products", "*", "-latest"]
   case r of
     [e] -> pure $ installationPath e

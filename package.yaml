@@ -24,6 +24,7 @@ dependencies:
   - filepath
   - process
   - process-extras
+  - template-haskell
   - text
   - time
 
@@ -40,3 +41,4 @@ tests:
     main: msbuild-test.hs
     dependencies:
       - msbuild
+      - pretty-show
