@@ -1,0 +1,20 @@
+version: 0.0.1.{build}
+
+image: Visual Studio 2017
+
+shallow_clone: true
+
+cache:
+  - "%LOCALAPPDATA%\\Programs\\stack"
+  - "%APPDATA%\\stack"
+  - .stack-work
+
+build_script:
+  - choco install haskell-stack
+  - stack setup > NUL
+  - stack exec pacman -- -Syu --noconfirm
+  - stack exec pacman -- -Syu --noconfirm
+  - stack build --haddock --haddock-deps --test --no-run-tests
+
+test_script:
+  - stack test
