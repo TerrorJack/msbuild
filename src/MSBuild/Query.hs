@@ -8,7 +8,7 @@ module MSBuild.Query
   , latestVCInstallationPath
   ) where
 
-import Control.Exception
+import Control.Exception.Safe
 import Data.Aeson
 import Data.Aeson.TH
 import qualified Data.ByteString.Lazy as LBS
@@ -35,7 +35,7 @@ runVSWhereWith args = do
       case eitherDecode' o of
         Left err -> fail err
         Right r -> pure r
-    _ -> throwIO c
+    _ -> throw c
 
 data Entry = Entry
   { instanceId :: !T.Text

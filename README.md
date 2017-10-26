@@ -6,7 +6,10 @@ Utilities for working with [MSBuild](https://github.com/Microsoft/msbuild) in Ha
 
 * Querying MSBuild installation info
 * Running commands in MSBuild command prompts
-* Compiling a single C/C++ source file to object file
+* Compiling a single C++ source file to object file
+* Linking object files to a DLL file
+
+See the [test script](test/msbuild-test.hs) for an example of compiling a C++ source file and loading a function on runtime.
 
 You can install MSBuild with [Build Tools for Visual Studio 2017](https://www.visualstudio.com/downloads/#build-tools-for-visual-studio-2017).
 

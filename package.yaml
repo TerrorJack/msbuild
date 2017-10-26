@@ -24,6 +24,7 @@ dependencies:
   - filepath
   - process
   - process-extras
+  - safe-exceptions
   - template-haskell
   - text
   - time
@@ -42,3 +43,4 @@ tests:
     dependencies:
       - msbuild
       - pretty-show
+      - Win32
