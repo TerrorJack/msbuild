@@ -5,7 +5,7 @@ module MSBuild.Query
   , runVSWhereWith
   , Entry(..)
   , queryEntries
-  , latestInstallationPath
+  , latestVCInstallationPath
   ) where
 
 import Control.Exception
@@ -63,9 +63,16 @@ $(deriveFromJSON defaultOptions 'Entry)
 queryEntries :: IO [Entry]
 queryEntries = runVSWhereWith ["-products", "*"]
 
-latestInstallationPath :: IO FilePath
-latestInstallationPath = do
-  r <- runVSWhereWith ["-products", "*", "-latest"]
+latestVCInstallationPath :: IO FilePath
+latestVCInstallationPath = do
+  r <-
+    runVSWhereWith
+      [ "-products"
+      , "*"
+      , "-requires"
+      , "Microsoft.VisualStudio.Component.VC.Tools.x86.x64"
+      , "-latest"
+      ]
   case r of
     [e] -> pure $ installationPath e
     _ ->

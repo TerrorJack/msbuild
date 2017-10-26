@@ -26,7 +26,7 @@ runCommands cmds =
 
 runCommandsWithX64NativeTools :: [String] -> IO ()
 runCommandsWithX64NativeTools cmds = do
-  p <- latestInstallationPath
+  p <- latestVCInstallationPath
   runCommands $
     ("call " ++ show (p </> "VC" </> "Auxiliary" </> "Build" </> "vcvars64.bat")) :
     cmds
