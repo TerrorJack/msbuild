@@ -2,6 +2,7 @@ module MSBuild.Run
   ( withTempFile
   , runCommands
   , runCommandsWithX64NativeTools
+  , compileX64CppStubFile
   , compileX64CppStub
   , linkX64ObjsToDLL
   ) where
@@ -51,14 +52,18 @@ runCommandsWithX64NativeTools cmds = do
     ("call " ++ show (p </> "VC" </> "Auxiliary" </> "Build" </> "vcvars64.bat")) :
     cmds
 
+compileX64CppStubFile :: FilePath -> [String] -> IO FilePath
+compileX64CppStubFile cpp_p args =
+  withTempFile False "tmp.obj" $ \obj_p -> do
+    runCommandsWithX64NativeTools
+      [unwords $ ["cl.exe", "/c"] ++ args ++ ["/Fo:", show obj_p, show cpp_p]]
+    pure obj_p
+
 compileX64CppStub :: BS.ByteString -> [String] -> IO FilePath
 compileX64CppStub cpp args =
   withTempFile True "tmp.cpp" $ \cpp_p -> do
     BS.writeFile cpp_p cpp
-    withTempFile False "tmp.obj" $ \obj_p -> do
-      runCommandsWithX64NativeTools
-        [unwords $ ["cl.exe", "/c"] ++ args ++ ["/Fo:", show obj_p, show cpp_p]]
-      pure obj_p
+    compileX64CppStubFile cpp_p args
 
 linkX64ObjsToDLL :: [FilePath] -> IO FilePath
 linkX64ObjsToDLL objs =
